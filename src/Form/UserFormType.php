@@ -20,51 +20,51 @@ class UserFormType extends AbstractType
     {
         $builder
             ->add('name',TextType::class, [
-                'label' => 'Nombre',
-                'required' => true,
+                'label' => 'Nombre de tarea',
+                'required' => $options["is_edit"] ? true : false,
                  'label_attr' => [
                     'class' => self::LABEL_STYLE,
                  ],
                  'attr' => [
                     'class' => self::INPUT_STYLE,
                     'if' => 'user_form_name',
-                    'placeholder' => 'Escribe tu nombre aqui'     
+                    'placeholder' => ''     
                  ]
             ])
             ->add('lastname',TextType::class, [
-                'label' => 'Apellido',
-                'required' => true,
+                'label' => 'Nivel',
+                'required' => $options["is_edit"] ? true : false,
                  'label_attr' => [
                     'class' => self::LABEL_STYLE,
                  ],
                  'attr' => [
                     'class' => self::INPUT_STYLE,
                     'if' => 'user_form_lastname',
-                    'placeholder' => 'Escribe tu Apellido aqui'     
+                    'placeholder' => ''     
                  ]
             ])
             ->add('email',TextType::class, [
                 'label' => 'Correo electronico',
-                'required' => true,
+                'required' => $options["is_edit"] ? true : false,
                  'label_attr' => [
                     'class' => self::LABEL_STYLE,
                  ],
                  'attr' => [
                     'class' => self::INPUT_STYLE,
                     'if' => 'user_form_email',
-                    'placeholder' => 'Escribe tu Correo electronico aqui'     
+                    'placeholder' => ''     
                  ]
             ])
             ->add('phone',TextType::class, [
                 'label' => 'Telefono',
-                'required' => true,
+                'required' => $options["is_edit"] ? true : false,
                  'label_attr' => [
                     'class' => self::LABEL_STYLE,
                  ],
                  'attr' => [
                     'class' => self::INPUT_STYLE,
                     'if' => 'user_form_phone',
-                    'placeholder' => 'Escribe tu telefono aqui'     
+                    'placeholder' => ''     
                  ]
             ])
         ;
@@ -74,6 +74,7 @@ class UserFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            "is_edit" => false,
         ]);
     }
 }

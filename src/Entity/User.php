@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
@@ -76,5 +80,29 @@ class User
         $this->phone = $phone;
 
         return $this;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('name', new Assert\NotBlank(['message' => 'Este campo no puede quedar vacio' ]));
+        $metadata->addPropertyConstraint('lastname', new Assert\NotBlank(['message' => 'Este campo no puede quedar vacio' ]));
+        $metadata->addPropertyConstraint('email', new Assert\NotBlank(['message' => 'Este campo no puede quedar vacio' ]));
+        $metadata->addPropertyConstraint('phone', new Assert\NotBlank(['message' => 'Este campo no puede quedar vacio' ]));
+
+        $metadata->addPropertyConstraint('phone', new Regex([
+            'pattern' => '/^\d{10}$/',
+            'message' => 'Este campo debe contener 10 digitos'
+        ]));
+
+        $metadata ->addPropertyConstraint('phone', new Regex ([
+            'pattern' => '/^\d+$/',
+            'message' => 'Este campo no puede contener letras'
+        ]));
+
+        $metadata ->addPropertyConstraint('email', new Assert\Email(['message' => 'Ingrese un correo valido']));
+        $metadata ->addConstraint(new UniqueEntity([
+            'fields' => 'email',
+            'message' => 'Ya existe un usuario registrado',
+        ]));
     }
 }

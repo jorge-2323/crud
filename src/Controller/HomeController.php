@@ -36,7 +36,9 @@ class HomeController extends AbstractController
     public function add(Request $request): Response
     {
         $user = new User();
-        $form = $this->createForm(UserFormType::class, $user);
+        $form = $this->createForm(UserFormType::class, $user, [
+            'is_edit' => false,
+        ]); 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -49,8 +51,10 @@ class HomeController extends AbstractController
 
                 $this->em->persist($user);
                 $this->em->flush();
+                flash()->success('Usuario registrado correctamente');
                 return $this->redirectToRoute('crud_show'); 
             } catch (\Exception $e) {
+                flash()->danger('Ocurrio un error al guardar el usuario');
                 return $this->redirectToRoute('crud_add');
             }
         } else {
@@ -69,13 +73,17 @@ class HomeController extends AbstractController
                 'No se encontro el registro con el id' . $id
             );
         }
-        $form = $this->createform(UserFormType::class, $user);
+        $form = $this->createform(UserFormType::class, $user, [
+            'is_edit' => false,
+        ]);
         $form ->handleRequest($request);
         if ($form ->isSubmitted() && $form->isValid()) {
             try {
                 $this->em->flush();
+                flash()->success('Usuario actualizado correctamente');
                 return $this->redirectToRoute('crud_show', ['id' => $id]);
             } catch (\Exception $e) {
+                flash()->danger('Ocurrio un error al guardar el usuario');
                 return $this->redirectToRoute('crud_update', ['id' => $id]);
             }
         } else{
@@ -86,7 +94,7 @@ class HomeController extends AbstractController
         }
     }
 
-    #[Route('/crud/delete/id{id}', name: 'crud_delete')]
+    #[Route('/crud/delete/{id}', name: 'crud_delete')]
 
     public function delete(int $id): Response
     {
@@ -98,6 +106,7 @@ class HomeController extends AbstractController
         }
         $this->em->remove($user);
         $this->em->flush();
+        flash()->success('Usuario eliminado correctamente');
         return $this->redirectToRoute('crud_show');
     }
 }

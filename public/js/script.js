@@ -1,9 +1,9 @@
-window.confimarSweet = function (pregunta, ruta){
+window.confirmarSweet = function (pregunta, ruta){
     Swal.fire({
         title: pregunta,
         icon: 'warning',
         showDenyButton: false,
-        showCancelButtton: true,
+        showCancelButton: true,
         confirmButtonText: 'Si',
         cancelButtonText: 'No',
         reverseButtons: true,
