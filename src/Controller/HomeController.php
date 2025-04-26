@@ -94,19 +94,23 @@ class HomeController extends AbstractController
         }
     }
 
-    #[Route('/crud/delete/{id}', name: 'crud_delete')]
-
-    public function delete(int $id): Response
-    {
+    #[Route('/crud/delete/{id}', name: 'crud_delete', methods: ['POST'])]
+    public function delete(Request $request, int $id): Response
+    {   
         $user = $this->em->getRepository(User::class)->find($id);
-        if (!$user){
-            throw $this->createNotFoundException(
-                'No se encontro el registro con el id' . $id
-            );
+            if (!$user) {
+            throw $this->createNotFoundException('No se encontró el registro con id ' . $id);
+        }
+        $submittedToken = $request->request->get('_token');
+            if (!$this->isCsrfTokenValid('delete' . $id, $submittedToken)) {
+            throw $this->createAccessDeniedException('Token CSRF inválido.');
         }
         $this->em->remove($user);
         $this->em->flush();
+
         flash()->success('Usuario eliminado correctamente');
+
         return $this->redirectToRoute('crud_show');
     }
+
 }
